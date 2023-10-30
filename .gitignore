@@ -71,3 +71,5 @@ musig_example
 /CMakeUserPresets.json
 # Default CMake build directory.
 /build
+# Tagion
+include/secp256k1_hash.h
