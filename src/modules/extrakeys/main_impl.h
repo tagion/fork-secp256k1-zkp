@@ -154,6 +154,21 @@ int secp256k1_xonly_pubkey_tweak_add_check(const secp256k1_context* ctx, const u
             && secp256k1_fe_is_odd(&pk.y) == tweaked_pk_parity;
 }
 
+int secp256k1_pubkey_from_xonly_pubkey(const secp256k1_context* ctx, secp256k1_pubkey *output_pubkey, const secp256k1_xonly_pubkey *internal_pubkey) {
+    secp256k1_ge pk;
+
+    VERIFY_CHECK(ctx != NULL);
+    ARG_CHECK(output_pubkey != NULL);
+    memset(output_pubkey, 0, sizeof(*output_pubkey));
+    ARG_CHECK(internal_pubkey != NULL);
+
+    if (!secp256k1_xonly_pubkey_load(ctx, &pk, internal_pubkey)) {
+        return 0;
+    }
+    secp256k1_pubkey_save(output_pubkey, &pk);
+    return 1;
+}
+
 static void secp256k1_keypair_save(secp256k1_keypair *keypair, const secp256k1_scalar *sk, secp256k1_ge *pk) {
     secp256k1_scalar_get_b32(&keypair->data[0], sk);
     secp256k1_pubkey_save((secp256k1_pubkey *)&keypair->data[32], pk);
